@@ -13,8 +13,16 @@ import java.util.List;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
+    private static final String DB_NAME = "MorningStar7.db";
+    private static final int DB_VERSION = 1;
 
+    // Database Tables
     public static final String CREDENTIALS_TABLE = "CREDENTIALS_TABLE";
+    public static final String BARCODE_TABLE = "BARCODE_TABLE";
+    public static final String LOCATIONDATA_TABLE = "LOCATIONDATA_TABLE";
+    public static final String ROWSANDSECTIONS_TABLE = "ROWSANDSECTIONS_TABLE";
+
+    // Credentials' Columns
     public static final String COLUMN_C_FIRSTNAME = "c_firstname";
     public static final String COLUMN_C_LASTNAME = "c_lastname";
     public static final String COLUMN_C_USERNAME = "c_username";
@@ -22,22 +30,52 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_C_EMAIL = "c_email";
     public static final String COLUMN_C_USER_ID = "c_userId";
 
+    // Barcode's Columns
+    public static final String COLUMN_B_CONTAINERID = "b_containerId";
+    public static final String COLUMN_B_BARCODEID = "b_barcodeId";
+    public static final String COLUMN_B_CONTAINERNAME = "b_containerName";
+    public static final String COLUMN_B_DIRTYBIT = "b_dirtyBit";
+
+    // LocationData's Columns
+    public static final String COLUMN_LD_CONTAINERID = "ld_containerId";
+    public static final String COLUMN_LD_LATITUDE = "ld_latitude";
+    public static final String COLUMN_LD_LONGITUDE = "ld_longitude";
+
+    // RowsAndSections' Table Columns
+    public static final String COLUMN_RS_CONTAINERID = "rc_containerId";
+    public static final String COLUMN_RS_ROW = "rc_containerId";
+    public static final String COLUMN_RS_SECTION = "rc_containerId";
+
+
+    // Creating Tables SQL
+    String createTable_credentials = "CREATE TABLE " + CREDENTIALS_TABLE + " (" + COLUMN_C_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_C_FIRSTNAME + " TEXT NOT NULL, " + COLUMN_C_LASTNAME + " TEXT NOT NULL, " + COLUMN_C_USERNAME + " Text NOT NULL, " + COLUMN_C_PASSWORD + " TEXT NOT NULL, " + COLUMN_C_EMAIL + " TEXT NOT NULL)";
+    String createTable_barcode = "CREATE TABLE " + BARCODE_TABLE + " (" + COLUMN_B_CONTAINERID + " INTEGER NOT NULL, " + COLUMN_B_BARCODEID + " INTEGER PRIMARY KEY, " + COLUMN_B_CONTAINERNAME + " TEXT NOT NULL, " + COLUMN_B_DIRTYBIT + " VARCHAR(1) NOT NULL)";
+    String createTable_locationdata = "CREATE TABLE " + LOCATIONDATA_TABLE + " (" + COLUMN_LD_CONTAINERID + " INTEGER PRIMARY KEY, " + COLUMN_LD_LATITUDE + " REAL NOT NULL, " + COLUMN_LD_LONGITUDE + " REAL NOT NULL)";
+    String createTable_rowsandsections = "CREATE TABLE " + ROWSANDSECTIONS_TABLE + " (" + COLUMN_RS_CONTAINERID + " INTEGER PRIMARY KEY, " + COLUMN_RS_ROW + " REAL NOT NULL, " + COLUMN_RS_SECTION + " REAL NOT NULL)";
+
     public DataBaseHelper(@Nullable Context context) {
-        super(context, "MorningStar7.db", null, 1);
+        super(context, DB_NAME, null, DB_VERSION);
     }
 
     // This is called the first time a database is accessed. There should be code in here to create a new database.
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTableStatement = "CREATE TABLE " + CREDENTIALS_TABLE + " (" + COLUMN_C_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_C_FIRSTNAME + " TEXT NOT NULL, " + COLUMN_C_LASTNAME + " TEXT NOT NULL, " + COLUMN_C_USERNAME + " Text NOT NULL, " + COLUMN_C_PASSWORD + " TEXT NOT NULL, " + COLUMN_C_EMAIL + " TEXT NOT NULL)";
-
-        db.execSQL(createTableStatement);
+        db.execSQL(createTable_credentials);
+        db.execSQL(createTable_barcode);
+        db.execSQL(createTable_locationdata);
+        db.execSQL(createTable_rowsandsections);
     }
 
     // This is called if the database version number changes. It prevents previous users apps from breaking when you change the database design.
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if(oldVersion < newVersion) {
+            db.execSQL("DROP TABLE IF EXISTS '" + CREDENTIALS_TABLE + "'");
+            db.execSQL("DROP TABLE IF EXISTS '" + BARCODE_TABLE + "'");
+            db.execSQL("DROP TABLE IF EXISTS '" + LOCATIONDATA_TABLE + "'");
+            db.execSQL("DROP TABLE IF EXISTS '" + ROWSANDSECTIONS_TABLE + "'");
+            onCreate(db);
+        }
     }
 
     public boolean addOne(UserRegistrationModel userRegistrationModel){
