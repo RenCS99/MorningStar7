@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">MorningStar7</string>
+    <string name="CustomerFirstName">First Name</string>
+    <string name="CustomerLastName">Last Name</string>
+    <string name="CustomerUsername">Username</string>
+    <string name="CustomerPassword">Password</string>
+    <string name="CustomerEmailAddress">Email Address</string>
+    <string name="register">Register</string>
+    <string name="view_all">View All</string>
 </resources>
