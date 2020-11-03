@@ -1,4 +1,4 @@
-package com.example.morningstar7;
+                                        package com.example.morningstar7;
 
 import android.content.ContentValues;
 import android.content.Context;
