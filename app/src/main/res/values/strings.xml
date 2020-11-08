@@ -7,4 +7,9 @@
     <string name="CustomerEmailAddress">Email Address</string>
     <string name="register">Register</string>
     <string name="view_all">View All</string>
+    <string name="reset">Reset</string>
+    <string name="scan">Scan</string>
+    <string name="search">Search</string>
+    <string name="manage">Manage</string>
+    <string name="sync">Sync</string>
 </resources>

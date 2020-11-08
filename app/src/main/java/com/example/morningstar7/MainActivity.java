@@ -2,6 +2,7 @@ package com.example.morningstar7;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -17,7 +18,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     // References to buttons and other controls on the layout
-    Button btn_register, btn_showAll;
+    Button btn_register, btn_showAll, btn_reset;
     EditText et_FirstName, et_LastName, et_Username, et_Password, et_EmailAddress;
     ListView lv_registeredUsers;
     ArrayAdapter userArrayAdapter;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         btn_register = findViewById(R.id.btn_register);
         btn_showAll = findViewById(R.id.btn_showAll);
+        btn_reset = findViewById(R.id.btn_reset);
         et_FirstName = findViewById(R.id.et_FirstName);
         et_LastName = findViewById(R.id.et_LastName);
         et_Username = findViewById(R.id.et_Username);
@@ -60,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
                 boolean success = dataBaseHelper.addOne(userRegistrationModel);
 
                 Toast.makeText(MainActivity.this, "Success = " + success, Toast.LENGTH_SHORT).show();
-                ShowRegisteredUserOnListView(dataBaseHelper);
+                //ShowRegisteredUserOnListView(dataBaseHelper);
+                startActivity(new Intent(MainActivity.this, SelectionActivity.class));
             }
         });
 
