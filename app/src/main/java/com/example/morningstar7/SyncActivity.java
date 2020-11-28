@@ -66,7 +66,9 @@ public class SyncActivity extends AppCompatActivity {
         btn_syncNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveToAppServer(arrayList.get(0).getBarcode_id(), arrayList.get(0).getContainer_name(), arrayList.get(0).getLatitude(), arrayList.get(0).getLongitude(), arrayList.get(0).getBarcode_row(), arrayList.get(0).getBarcode_sec(), arrayList.get(0).getLastUpdated(), arrayList.get(0).getSync_status());
+                for (int i = 0; i < arrayList.size(); i++) {
+                    saveToAppServer(arrayList.get(i).getBarcode_id(), arrayList.get(i).getContainer_name(), arrayList.get(i).getLatitude(), arrayList.get(i).getLongitude(), arrayList.get(i).getBarcode_row(), arrayList.get(i).getBarcode_sec(), arrayList.get(i).getLastUpdated(), arrayList.get(i).getSync_status());
+                }
             }
         });
 
@@ -104,7 +106,7 @@ public class SyncActivity extends AppCompatActivity {
         SQLiteDatabase db = dataBaseHelper1.getWritableDatabase();
 
         if(checkNetworkConnection()) {
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, DataBaseHelper.SERVER_URL,
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, dataBaseHelper1.SERVER_URL,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
