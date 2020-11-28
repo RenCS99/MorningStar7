@@ -12,8 +12,8 @@ public class MySingleton {
     private static Context mContext;
 
     private MySingleton(Context context){
-        this.mContext = context;
-        this.requestQueue = getRequestQueue();
+        mContext = context;
+        requestQueue = getRequestQueue();
     }
 
     private RequestQueue getRequestQueue(){
