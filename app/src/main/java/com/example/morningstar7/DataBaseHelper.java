@@ -147,7 +147,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String q = "SELECT * FROM " + BARCODE_TABLE + " WHERE b_barcodeId = ? OR b_barcodeId = ?;";
         String val = "012345678905";
-        String[] args = {val};
+        String[] args = {val, "012345698905"};
         Cursor cur = db.rawQuery(q, args);
 
         if(cur.getCount() == 0) {
