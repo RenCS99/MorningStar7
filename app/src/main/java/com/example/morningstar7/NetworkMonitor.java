@@ -29,12 +29,12 @@ public class NetworkMonitor extends BroadcastReceiver{
             final DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
             final SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
 
-            Cursor cur = dataBaseHelper.readFromLocalDatabase(db);
+            Cursor cur = dataBaseHelper.readFromLocalDatabase();
 
             while(cur.moveToNext()){
-                int sync_status = cur.getInt(cur.getColumnIndex(dataBaseHelper.COLUMN_S_SYNC_STATUS));
+                int sync_status = cur.getInt(cur.getColumnIndex(dataBaseHelper.COLUMN_B_SYNCSTATUS));
                 if(sync_status == dataBaseHelper.SYNC_STATUS_FAILED){
-                    final int scan_id = cur.getInt(cur.getColumnIndex(dataBaseHelper.COLUMN_S_SCAN_ID));
+                    final int barcode_id = cur.getInt(cur.getColumnIndex(dataBaseHelper.COLUMN_B_BARCODEID));
                     StringRequest stringRequest = new StringRequest(Request.Method.POST, dataBaseHelper.SERVER_URL,
                             new Response.Listener<String>() {
                                 @Override
@@ -43,7 +43,7 @@ public class NetworkMonitor extends BroadcastReceiver{
                                         JSONObject jsonObject = new JSONObject(response);
                                         String Response = jsonObject.getString("response");
                                         if(Response.equals("OK")){
-                                            dataBaseHelper.updateLocalDatabase(scan_id, dataBaseHelper.SYNC_STATUS_OK, db);
+                                            dataBaseHelper.updateLocalDatabase(barcode_id, dataBaseHelper.SYNC_STATUS_OK, db);
                                             context.sendBroadcast(new Intent(dataBaseHelper.UI_UPDATE_BROADCAST));
                                         }
                                     } catch (JSONException e) {
@@ -62,7 +62,7 @@ public class NetworkMonitor extends BroadcastReceiver{
                                 @Override
                                 protected Map<String, String> getParams() throws AuthFailureError{
                                     Map<String, String> params = new HashMap<>();
-                                    params.put("scan_id", String.valueOf(scan_id));
+                                    params.put("c_barcodeId", String.valueOf(barcode_id));
                                     return super.getParams();
                                 }
                             };
