@@ -31,7 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_interface);
-        //getSupportActionBar().hide();
+        getSupportActionBar().hide();
 
         btn_login = findViewById(R.id.btn_login);
         btn_register = findViewById(R.id.btn_register);
