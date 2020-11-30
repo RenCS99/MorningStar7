@@ -28,8 +28,7 @@
         <activity android:name=".RegisterActivity">
 
         </activity>
-        <activity android:name=".SelectionActivity"
-            android:parentActivityName=".LoginActivity">
+        <activity android:name=".SelectionActivity" android:parentActivityName=".LoginActivity">
 
         </activity>
         <activity android:name=".ScanningActivity"
