@@ -12,4 +12,16 @@
     <string name="search">Search</string>
     <string name="manage">Manage</string>
     <string name="sync">Sync</string>
+    <string name="userName" />
+    <string name="login">Login</string>
+    <string name="username">Username</string>
+    <string name="sync_now">Sync Now</string>
+    <string name="txtView">TextView</string>
+    <string name="sync_status_success">Sync status success</string>
+    <string name="barcodeId_txt">Barcode Id </string>
+    <string name="LoginText"> Login </string>
+    <string name="RegisterTxt"> Register </string>
+    <string name="RowTxt"> Row: </string>
+    <string name="SectionTxt"> Section: </string>
+    <string name="SyncImg"> Shows if it is sync or not </string>
 </resources>

@@ -14,7 +14,8 @@ public class ManageActivity extends AppCompatActivity {
         setContentView(R.layout.manage_interface);
         getSupportActionBar().setTitle("Manage");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
+        dataBaseHelper.insertOneToBarcodeTable();
 
     }
 

@@ -1,21 +1,19 @@
 package com.example.morningstar7;
 
-import android.text.Editable;
 
 public class UserRegistrationModel {
 
-    private int id;
     private String firstName;
     private String lastName;
     private String username;
     private String password;
     private String userEmail;
 
+
     // Constructors
 
 
-    public UserRegistrationModel(int id, String firstName, String lastName, String username, String password, String userEmail) {
-        this.id = id;
+    public UserRegistrationModel(String firstName, String lastName, String username, String password, String userEmail) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
@@ -31,8 +29,7 @@ public class UserRegistrationModel {
     @Override
     public String toString() {
         return "UserRegistrationModel{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
+                "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", username='" + username + '\'' +
                 ", password=" + password +
@@ -41,14 +38,6 @@ public class UserRegistrationModel {
     }
 
     // Getters and Setters
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getFirstName() {
         return firstName;
