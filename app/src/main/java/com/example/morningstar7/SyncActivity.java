@@ -4,12 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -24,7 +26,6 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,9 +36,8 @@ public class SyncActivity extends AppCompatActivity {
     Button btn_syncNow;
     RecyclerView rv_syncList;
     RecyclerAdapter adapter;
-    ArrayList<SyncEntry> arrayList;
-
-    //BroadcastReceiver broadcastReceiver;
+    ArrayList<SyncEntry> arrayList = new ArrayList<>();
+    BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,19 +48,21 @@ public class SyncActivity extends AppCompatActivity {
 
         btn_syncNow = findViewById(R.id.btn_syncNow);
         rv_syncList = findViewById(R.id.rv_syncList);
-//        broadcastReceiver = new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                readFromLocalStorage();
-//            }
-//        };
 
-        arrayList = new ArrayList<>();
-        adapter = new RecyclerAdapter(arrayList);
+
         rv_syncList.setLayoutManager(new LinearLayoutManager(SyncActivity.this));
+        rv_syncList.setHasFixedSize(true);
+        adapter = new RecyclerAdapter(arrayList);
         rv_syncList.setAdapter(adapter);
-
         readFromLocalStorage();
+        broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                readFromLocalStorage();
+            }
+        };
+
+
 
 
         btn_syncNow.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +82,7 @@ public class SyncActivity extends AppCompatActivity {
 
         Cursor cur = dataBaseHelper1.readFromLocalDatabase();
         if(cur.getCount() == 0) {
-            Toast.makeText(this, "No data.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No data", Toast.LENGTH_SHORT).show();
         }
         else {
             while (cur.moveToNext()) {
@@ -113,7 +115,8 @@ public class SyncActivity extends AppCompatActivity {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
                                 String Response = jsonObject.getString("response");
-                                if(Response.equals("OK")) {
+                                //Toast.makeText(getApplicationContext(), " Here " + Response, Toast.LENGTH_SHORT).show();
+                                if(Response.equals("Sync Successfully")) {
                                     saveToLocalStorage(barcode_id, container_name, latitude, longitude, row, section, lastUpdated, DataBaseHelper.SYNC_STATUS_OK);
                                 }
                                 else {
@@ -170,16 +173,15 @@ public class SyncActivity extends AppCompatActivity {
         dataBaseHelper1.close();
     }
 
+    @Override
+    protected void onStart(){
+        super.onStart();
+        registerReceiver(broadcastReceiver, new IntentFilter(DataBaseHelper.UI_UPDATE_BROADCAST));
+    }
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        registerReceiver(broadcastReceiver, new IntentFilter(dataBaseHelper.UI_UPDATE_BROADCAST));
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        unregisterReceiver(broadcastReceiver);
-//    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
+    }
 }
