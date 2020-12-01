@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -78,7 +79,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void updateLocalDatabase(int barcode_id, int sync_status, SQLiteDatabase db){
         ContentValues cv = new ContentValues();
         cv.put(COLUMN_B_SYNCSTATUS, sync_status);
-        String selection = COLUMN_B_BARCODEID + " LIKE ?";
+        String selection = COLUMN_B_BARCODEID + " LIKE '%?%'";
         String[] args = {String.valueOf(barcode_id)};
         db.update(BARCODE_TABLE, cv, selection, args);
     }
@@ -201,8 +202,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     public boolean checkIfEntryInDb(UserRegistrationModel userRegistrationModel){
 
-        String queryString = "SELECT * FROM " + CREDENTIALS_TABLE + " WHERE " + COLUMN_C_USERNAME + " = ?;";
-        String[] args = {userRegistrationModel.getUsername()};
+        String queryString = "SELECT * FROM " + CREDENTIALS_TABLE + " WHERE " + COLUMN_C_USERNAME + " = ? AND " + COLUMN_C_PASSWORD + " = ?;";
+        String[] args = {userRegistrationModel.getUsername(), userRegistrationModel.getPassword()};
 
         SQLiteDatabase db = this.getReadableDatabase();
 
