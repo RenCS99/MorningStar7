@@ -19,10 +19,9 @@ import com.vishnusivadas.advanced_httpurlconnection.PutData;
 public class RegisterActivity extends AppCompatActivity {
 
     // References to buttons and other controls on the layout
-    Button btn_register; //, btn_showAll;
+    Button btn_register;
     EditText et_FirstName, et_LastName, et_Usernamesignup, et_Passwordsignup, et_EmailAddress;
-//    ListView lv_registeredUsers;
-//    ArrayAdapter userArrayAdapter;
+
     DataBaseHelper dataBaseHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,57 +65,46 @@ public class RegisterActivity extends AppCompatActivity {
                     data[2] = username;
                     data[3] = password;
                     data[4] = email;
-                    PutData putData = new PutData("http://10.0.0.195/morningstar/signup.php", "POST", field, data);
-                    if (putData.startPut()) {
-                        if (putData.onComplete()) {
-                            String result = putData.getResult();
-                            if (result.equals("Registration Successful")) {
-                                Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-                                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
-                                finish();
-                            } else {
-                                UserRegistrationModel userRegistrationModel;
-
-                                userRegistrationModel = new UserRegistrationModel(et_FirstName.getText().toString(), et_LastName.getText().toString(), et_Usernamesignup.getText().toString(), et_Passwordsignup.getText().toString(), et_EmailAddress.getText().toString());
-                                boolean success = dataBaseHelper.addOneToRegTable(userRegistrationModel);
-
-                                if (success) {
-                                    //Toast.makeText(RegisterActivity.this, userRegistrationModel.toString(), Toast.LENGTH_SHORT).show();
-                                    Toast.makeText(RegisterActivity.this, "Success = " + success, Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(RegisterActivity.this, SelectionActivity.class));
+                    try {
+                        PutData putData = new PutData("http://10.0.0.195/morningstar/signup.php", "POST", field, data);
+                        if (putData.startPut()) {
+                            if (putData.onComplete()) {
+                                String result = putData.getResult();
+                                if (result.equals("Registration Successful")) {
+                                    Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+                                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                                    finish();
                                 } else {
-                                    Toast.makeText(RegisterActivity.this, "Username Already Taken.", Toast.LENGTH_SHORT).show();
-                                    et_FirstName.setText("");
-                                    et_LastName.setText("");
-                                    et_Usernamesignup.setText("");
-                                    et_Passwordsignup.setText("");
-                                    et_EmailAddress.setText("");
+                                    UserRegistrationModel userRegistrationModel;
+
+                                    userRegistrationModel = new UserRegistrationModel(et_FirstName.getText().toString(), et_LastName.getText().toString(), et_Usernamesignup.getText().toString(), et_Passwordsignup.getText().toString(), et_EmailAddress.getText().toString());
+                                    boolean success = dataBaseHelper.addOneToRegTable(userRegistrationModel);
+
+                                    if (success) {
+                                        //Toast.makeText(RegisterActivity.this, userRegistrationModel.toString(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(RegisterActivity.this, "Success = " + success, Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(RegisterActivity.this, SelectionActivity.class));
+                                    } else {
+                                        Toast.makeText(RegisterActivity.this, "Username Already Taken.", Toast.LENGTH_SHORT).show();
+                                        et_FirstName.setText("");
+                                        et_LastName.setText("");
+                                        et_Usernamesignup.setText("");
+                                        et_Passwordsignup.setText("");
+                                        et_EmailAddress.setText("");
+                                    }
                                 }
+                                //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                             }
-                            //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                         }
+                    } catch (Exception e) {
+                        //ERROR Code 2002: WAIT_FAILURE_SERVER
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
             else {
                 Toast.makeText(getApplicationContext(), "All fields are required", Toast.LENGTH_SHORT).show();
             }
-
-
         });
-
-//        btn_showAll.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                DataBaseHelper dataBaseHelper = new DataBaseHelper(RegisterActivity.this);
-//                ShowRegisteredUserOnListView(dataBaseHelper);
-//                lv_registeredUsers.setVisibility(lv_registeredUsers.isShown() ? lv_registeredUsers.GONE : lv_registeredUsers.VISIBLE);
-//            }
-//        });
     }
-
-//    private void ShowRegisteredUserOnListView(DataBaseHelper dataBaseHelper2) {
-//        userArrayAdapter = new ArrayAdapter<>(RegisterActivity.this, android.R.layout.simple_list_item_1, dataBaseHelper2.getEveryoneRegistered());
-//        lv_registeredUsers.setAdapter(userArrayAdapter);
-//    }
 }
