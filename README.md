@@ -15,3 +15,4 @@
   ***Objectives***
   
   Using a camera, read the barcode or label on the side of the container and create a geotag of the product for future locating and organization. Ideally the solution would store the data on a local database and could be deployed in such a way that the forklift operators would be able to log the positions quickly and, in the future, autonomously.
+#read me
