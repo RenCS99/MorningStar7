@@ -62,3 +62,27 @@ public class ScanningActivity extends AppCompatActivity{
         btn_submit = findViewById(R.id.btn_submit);
 
         Button btn_scan = findViewById(R.id.btn_scan);
+
+
+        CodeScannerView scannerView = findViewById(R.id.scanner_view);
+        mCodeScanner = new CodeScanner(this, scannerView);
+        mCodeScanner.setDecodeCallback(new DecodeCallback() {
+            @Override
+            public void onDecoded(@NonNull final Result result) {
+                ScanningActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        createDialog(result.getText().toString());
+                        //Toast.makeText(ScanningActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        btn_scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                framelayout.setVisibility(View.VISIBLE);
+                relativeLayoutSubmitForm.setVisibility(View.GONE);
+                mCodeScanner.startPreview();
+            }
+        });
