@@ -52,3 +52,13 @@ public class ScanningActivity extends AppCompatActivity{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         dataBaseHelper = new DataBaseHelper(ScanningActivity.this);
+
+        relativeLayoutSubmitForm = findViewById(R.id.relativeLayoutSubmitForm);
+        framelayout = findViewById(R.id.framelayout);
+        editText_barcode = findViewById(R.id.editText_barcode);
+        editText_row = findViewById(R.id.editText_row);
+        editText_column = findViewById(R.id.editText_column);
+
+        btn_submit = findViewById(R.id.btn_submit);
+
+        Button btn_scan = findViewById(R.id.btn_scan);
