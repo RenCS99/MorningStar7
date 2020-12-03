@@ -1,7 +1,7 @@
 package com.example.morningstar7;
 
 public class RowColumnBarcodeModel {
-
+// vars
     private int id;
     private int row;
     private int column;
@@ -11,7 +11,7 @@ public class RowColumnBarcodeModel {
     public RowColumnBarcodeModel(int anInt, String string, String cursorString) {
 
     }
-
+//parms of rows and cols
     public RowColumnBarcodeModel(int id, int row, int column, String barcode) {
         this.id = id;
         this.row = row;
@@ -52,6 +52,7 @@ public class RowColumnBarcodeModel {
     }
 
     @Override
+    //grab id
     public String toString() {
         return "RowColumnBardcodeModel{" +
                 "id=" + id +
