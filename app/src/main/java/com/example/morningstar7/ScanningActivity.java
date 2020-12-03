@@ -9,6 +9,11 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.budiyev.android.codescanner.CodeScanner;
@@ -19,3 +24,19 @@ import com.google.zxing.Result;
 
 //new  merger from different branch
 
+// scanning class
+// button for submit
+// texts for barcode, row, and cols
+public class ScanningActivity extends AppCompatActivity{
+    private CodeScanner mCodeScanner;
+    RelativeLayout relativeLayoutSubmitForm;
+    FrameLayout framelayout;
+    EditText editText_barcode;
+    EditText editText_row;
+    EditText editText_column;
+
+    Button btn_submit;
+
+    DataBaseHelper dataBaseHelper;
+
+    ArrayAdapter userArrayAdapter;
