@@ -54,7 +54,13 @@ public class RowColumnBarcodeModel {
     public void setId(int id) {
         this.id = id;
     }
-
     @Override
+    public String toString() {
+        return "RowColumnBardcodeModel{" +
+                "id=" + id +
+                ", row=" + row +
+                ", column=" + column +
+                ", barcode='" + barcode + '\'' +
+                '}';
 
 }
