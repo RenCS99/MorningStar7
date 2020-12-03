@@ -7,4 +7,13 @@ public class RowColumnBarcodeModel {
     //edit
 
     //inputs for rows and column page after scanner
+
+    private int id;
+    private int row;
+    private int column;
+    private String barcode;
+
+
+
+
 }
