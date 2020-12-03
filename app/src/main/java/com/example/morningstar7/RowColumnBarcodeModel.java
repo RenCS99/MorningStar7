@@ -13,7 +13,16 @@ public class RowColumnBarcodeModel {
     private int column;
     private String barcode;
 
+    public RowColumnBarcodeModel(int anInt, String string, String cursorString) {
 
+    }
+
+    public RowColumnBarcodeModel(int id, int row, int column, String barcode) {
+        this.id = id;
+        this.row = row;
+        this.column = column;
+        this.barcode = barcode;
+    }
 
 
 }
