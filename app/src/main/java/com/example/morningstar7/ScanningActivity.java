@@ -40,3 +40,15 @@ public class ScanningActivity extends AppCompatActivity{
     DataBaseHelper dataBaseHelper;
 
     ArrayAdapter userArrayAdapter;
+
+    //override function
+
+    //get scan ability of enabled
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.scanning_interface);
+        getSupportActionBar().setTitle("Scan");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        dataBaseHelper = new DataBaseHelper(ScanningActivity.this);
