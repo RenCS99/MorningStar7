@@ -1,13 +1,16 @@
 package com.example.morningstar7;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -86,3 +89,63 @@ public class ScanningActivity extends AppCompatActivity{
                 mCodeScanner.startPreview();
             }
         });
+
+
+        btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RowColumnBarcodeModel rowColumnBarcodeModel;
+                if(TextUtils.isEmpty(editText_row.getText()) || TextUtils.isEmpty(editText_column.getText()) || TextUtils.isEmpty(editText_barcode.getText())){
+                    Toast.makeText(ScanningActivity.this, "Error while", Toast.LENGTH_SHORT).show();
+                    rowColumnBarcodeModel = new RowColumnBarcodeModel(-1, 0, 0, "error");
+                } else{
+
+                    rowColumnBarcodeModel = new RowColumnBarcodeModel(1, Integer.parseInt(editText_row.getText().toString()), Integer.parseInt(editText_column.getText().toString()), editText_barcode.getText().toString());
+                }
+
+                DataBaseHelper dataBaseHelper  = new DataBaseHelper(ScanningActivity.this);
+
+                long success = dataBaseHelper.addRowColumnBarcode(rowColumnBarcodeModel);
+                Toast.makeText(ScanningActivity.this, "Barcode with values has been written in database at index: " + success, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCodeScanner.startPreview();
+    }
+
+    @Override
+    protected void onPause() {
+        mCodeScanner.releaseResources();
+        super.onPause();
+    }
+
+    private void createDialog(final String rawValue) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setNegativeButton("Scan Again", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                mCodeScanner.startPreview();
+            }
+        }).setPositiveButton("Add data", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                framelayout.setVisibility(View.GONE);
+                relativeLayoutSubmitForm.setVisibility(View.VISIBLE);
+                editText_barcode.setText(rawValue);
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.setTitle("Do you want to add this value into database?");
+        dialog.setMessage(rawValue);
+        dialog.show();
+    }
+
+
+
+}
