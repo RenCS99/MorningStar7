@@ -88,7 +88,6 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
                 android:contentDescription="@string/SyncImg"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
