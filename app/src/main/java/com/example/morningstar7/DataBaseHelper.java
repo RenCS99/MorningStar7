@@ -127,18 +127,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return insert != -1;
     }
 
-    public void insertOneToBarcodeTable() {
+    public void insertToBarcodeTable() {
         SQLiteDatabase db = this.getWritableDatabase();
-        String q = "SELECT * FROM " + BARCODE_TABLE + " WHERE b_barcodeId = ? OR b_barcodeId = ?;";
-        String val = "012345678905";
-        String[] args = {val, "012345698905"};
+        String q = "SELECT * FROM " + BARCODE_TABLE + " WHERE b_barcodeId IN (?,?,?,?);";
+        String[] args = {"012345678905", "016545698905", "016926215615", "019481521561"};
         Cursor cur = db.rawQuery(q, args);
 
         if(cur.getCount() == 0) {
-            String q1 = "INSERT INTO " + BARCODE_TABLE + " VALUES('012345678905', 'Wooden Box', '12.45129', '-167.12746', '5', '1', '2020-11-27 07:05:12.215', '1');";
-            String q2 = "INSERT INTO " + BARCODE_TABLE + " VALUES('012345698905', 'Wooden Box', '12.45129', '-167.12746', '5', '1', '2020-11-27 07:05:12.215', '1');";
+            String q1 = "INSERT INTO " + BARCODE_TABLE + " VALUES('012345678905', 'Bin', '12.45129', '-167.12746', '5', '1', '2020-11-27 07:05:12.215', '1');";
+            String q2 = "INSERT INTO " + BARCODE_TABLE + " VALUES('016545698905', 'Drum', '12.45129', '-167.12746', '5', '1', '2020-11-27 07:05:12.215', '1');";
+            String q3 = "INSERT INTO " + BARCODE_TABLE + " VALUES('016926215615', 'Drum', '17.45559', '-167.11746', '12', '3', '2020-11-27 09:05:12.215', '1');";
+            String q4 = "INSERT INTO " + BARCODE_TABLE + " VALUES('019481521561', 'Bin', '17.45559', '-167.11746', '12', '3', '2020-11-27 09:05:12.215', '1');";
             db.execSQL(q1);
             db.execSQL(q2);
+            db.execSQL(q3);
+            db.execSQL(q4);
         }
         cur.close();
     }
