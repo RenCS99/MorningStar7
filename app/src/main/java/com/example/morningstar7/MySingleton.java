@@ -9,16 +9,16 @@ import com.android.volley.toolbox.Volley;
 public class MySingleton {
     private static MySingleton mInstance;
     private RequestQueue requestQueue;
-    private static Context context;
+    private static Context mContext;
 
     private MySingleton(Context context){
-        this.context = context;
-        this.requestQueue = getRequestQueue();
+        mContext = context;
+        requestQueue = getRequestQueue();
     }
 
     private RequestQueue getRequestQueue(){
         if(requestQueue == null){
-            requestQueue = Volley.newRequestQueue(context.getApplicationContext());
+            requestQueue = Volley.newRequestQueue(mContext.getApplicationContext());
         }
         return requestQueue;
     }
