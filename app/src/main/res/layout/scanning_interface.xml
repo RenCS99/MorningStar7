@@ -9,8 +9,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        //scanner of xml user interface
-
         <com.budiyev.android.codescanner.CodeScannerView
             android:id="@+id/scanner_view"
             android:layout_width="match_parent"
