@@ -15,7 +15,7 @@ public class ManageActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Manage");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         DataBaseHelper dataBaseHelper = new DataBaseHelper(this);
-        dataBaseHelper.insertOneToBarcodeTable();
+        dataBaseHelper.insertToBarcodeTable();
 
     }
 

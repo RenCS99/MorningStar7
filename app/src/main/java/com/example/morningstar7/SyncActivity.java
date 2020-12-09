@@ -3,19 +3,13 @@ package com.example.morningstar7;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -37,7 +31,6 @@ public class SyncActivity extends AppCompatActivity {
     RecyclerView rv_syncList;
     RecyclerAdapter adapter;
     ArrayList<SyncEntry> arrayList = new ArrayList<>();
-    BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +48,6 @@ public class SyncActivity extends AppCompatActivity {
         adapter = new RecyclerAdapter(arrayList);
         rv_syncList.setAdapter(adapter);
         readFromLocalStorage();
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                readFromLocalStorage();
-            }
-        };
-
-
-
 
         btn_syncNow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,36 +60,9 @@ public class SyncActivity extends AppCompatActivity {
 
     }
 
-    public void readFromLocalStorage(){
-        arrayList.clear();
-        DataBaseHelper dataBaseHelper1 = new DataBaseHelper(this);
-
-        Cursor cur = dataBaseHelper1.readFromLocalDatabase();
-        if(cur.getCount() == 0) {
-            Toast.makeText(this, "No data", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            while (cur.moveToNext()) {
-                String barcode_id = cur.getString(cur.getColumnIndex(DataBaseHelper.COLUMN_B_BARCODEID));
-                String container_name = cur.getString(cur.getColumnIndex(DataBaseHelper.COLUMN_B_CONTAINERNAME));
-                double latitude = cur.getDouble(cur.getColumnIndex(DataBaseHelper.COLUMN_B_LATITUDE));
-                double longitude = cur.getDouble(cur.getColumnIndex(DataBaseHelper.COLUMN_B_LONGITUDE));
-                int row = cur.getInt(cur.getColumnIndex(DataBaseHelper.COLUMN_B_ROW));
-                int section = cur.getInt(cur.getColumnIndex(DataBaseHelper.COLUMN_B_SECTION));
-                String lastUpdated = cur.getString(cur.getColumnIndex(DataBaseHelper.COLUMN_B_LASTUPDATED));
-                int sync_status = cur.getInt(cur.getColumnIndex(DataBaseHelper.COLUMN_B_SYNCSTATUS));
-                arrayList.add(new SyncEntry(barcode_id, container_name, latitude, longitude, row, section, lastUpdated, sync_status));
-            }
-        }
-        adapter.notifyDataSetChanged();
-        cur.close();
-        dataBaseHelper1.close();
-    }
-
     private void saveToAppServer(String barcode_id, String container_name, double latitude, double longitude, int row, int section, String lastUpdated, int sync_status){
 
-        DataBaseHelper dataBaseHelper1 = new DataBaseHelper(this);
-        SQLiteDatabase db = dataBaseHelper1.getWritableDatabase();
+        DataBaseHelper dataBaseHelper1 = new DataBaseHelper(getApplicationContext());
 
         if(checkNetworkConnection()) {
             StringRequest stringRequest = new StringRequest(Request.Method.POST, dataBaseHelper1.SERVER_URL,
@@ -114,15 +71,10 @@ public class SyncActivity extends AppCompatActivity {
                         public void onResponse(String response) {
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
-                                String Response = jsonObject.getString("response");
-                                //Toast.makeText(getApplicationContext(), " Here " + Response, Toast.LENGTH_SHORT).show();
-                                if(Response.equals("Sync Successfully")) {
-                                    saveToLocalStorage(barcode_id, container_name, latitude, longitude, row, section, lastUpdated, DataBaseHelper.SYNC_STATUS_OK);
+                                String Response = jsonObject.getString("success");
+                                if(Response.equals("Sync Successful")) {
+                                    updateLocalStorage(barcode_id, dataBaseHelper1.SYNC_STATUS_OK);
                                 }
-                                else {
-                                    saveToLocalStorage(barcode_id, container_name, latitude, longitude, row, section, lastUpdated, DataBaseHelper.SYNC_STATUS_FAILED);
-                                }
-
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -130,7 +82,7 @@ public class SyncActivity extends AppCompatActivity {
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            saveToLocalStorage(barcode_id, container_name, latitude, longitude, row, section, lastUpdated, DataBaseHelper.SYNC_STATUS_FAILED);
+                            updateLocalStorage(barcode_id, dataBaseHelper1.SYNC_STATUS_FAILED);
                         }
             })
             {
@@ -151,11 +103,10 @@ public class SyncActivity extends AppCompatActivity {
             MySingleton.getInstance(SyncActivity.this).addToRequestQue(stringRequest);
         }
         else {
-            saveToLocalStorage(barcode_id, container_name, latitude, longitude, row, section, lastUpdated, DataBaseHelper.SYNC_STATUS_FAILED);
+            updateLocalStorage(barcode_id, dataBaseHelper1.SYNC_STATUS_FAILED);
         }
 
     }
-
 
     public boolean checkNetworkConnection(){
         ConnectivityManager connectivityManager = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -163,25 +114,39 @@ public class SyncActivity extends AppCompatActivity {
         return (networkInfo != null && networkInfo.isConnected());
     }
 
-    public void saveToLocalStorage(String barcode_id, String container_name, double latitude, double longitude, int row, int section, String lastUpdated, int sync_status) {
-        DataBaseHelper dataBaseHelper1 = new DataBaseHelper(this);
-        SQLiteDatabase db = dataBaseHelper1.getWritableDatabase();
+    public void updateLocalStorage(String barcode_id, int sync_status) {
+        DataBaseHelper dataBaseHelper2 = new DataBaseHelper(this);
 
-        dataBaseHelper1.saveToLocalDatabase(barcode_id, container_name, latitude, longitude, row, section, lastUpdated, sync_status, db);
+        dataBaseHelper2.updateLocalDatabase(barcode_id, sync_status);
 
         readFromLocalStorage();
+        dataBaseHelper2.close();
+    }
+
+    public void readFromLocalStorage(){
+        arrayList.clear();
+        DataBaseHelper dataBaseHelper1 = new DataBaseHelper(getApplicationContext());
+
+        Cursor cur = dataBaseHelper1.readFromLocalDatabase();
+        if(cur.getCount() == 0) {
+            //Toast.makeText(this, "No data", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            while (cur.moveToNext()) {
+                String barcode_id = cur.getString(cur.getColumnIndex(DataBaseHelper.COLUMN_B_BARCODEID));
+                String container_name = cur.getString(cur.getColumnIndex(DataBaseHelper.COLUMN_B_CONTAINERNAME));
+                double latitude = cur.getDouble(cur.getColumnIndex(DataBaseHelper.COLUMN_B_LATITUDE));
+                double longitude = cur.getDouble(cur.getColumnIndex(DataBaseHelper.COLUMN_B_LONGITUDE));
+                int row = cur.getInt(cur.getColumnIndex(DataBaseHelper.COLUMN_B_ROW));
+                int section = cur.getInt(cur.getColumnIndex(DataBaseHelper.COLUMN_B_SECTION));
+                String lastUpdated = cur.getString(cur.getColumnIndex(DataBaseHelper.COLUMN_B_LASTUPDATED));
+                int sync_status = cur.getInt(cur.getColumnIndex(DataBaseHelper.COLUMN_B_SYNCSTATUS));
+                arrayList.add(new SyncEntry(barcode_id, container_name, latitude, longitude, row, section, lastUpdated, sync_status));
+            }
+        }
+
+        adapter.notifyDataSetChanged();
+        cur.close();
         dataBaseHelper1.close();
-    }
-
-    @Override
-    protected void onStart(){
-        super.onStart();
-        registerReceiver(broadcastReceiver, new IntentFilter(DataBaseHelper.UI_UPDATE_BROADCAST));
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(broadcastReceiver);
     }
 }

@@ -48,7 +48,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor readFromLocalDatabase() {
-        String query = "SELECT * FROM " + BARCODE_TABLE + " WHERE b_syncStatus = 1;";
+        String query = "SELECT * FROM " + BARCODE_TABLE + ";";
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = null;
@@ -58,25 +58,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public void saveToLocalDatabase(String barcode_id, String container_name, double latitude, double longitude, int row, int section, String lastUpdated, int sync_status, SQLiteDatabase db){
-        ContentValues cv = new ContentValues();
-        cv.put(COLUMN_B_BARCODEID, barcode_id);
-        cv.put(COLUMN_B_CONTAINERNAME, container_name);
-        cv.put(COLUMN_B_LATITUDE, latitude);
-        cv.put(COLUMN_B_LONGITUDE, longitude);
-        cv.put(COLUMN_B_ROW, row);
-        cv.put(COLUMN_B_SECTION, section);
-        cv.put(COLUMN_B_LASTUPDATED, lastUpdated);
-        cv.put(COLUMN_B_SYNCSTATUS,sync_status);
-        db.insert(BARCODE_TABLE, null, cv);
-    }
-
-    public void updateLocalDatabase(int barcode_id, int sync_status, SQLiteDatabase db){
-        ContentValues cv = new ContentValues();
-        cv.put(COLUMN_B_SYNCSTATUS, sync_status);
-        String selection = COLUMN_B_BARCODEID + " LIKE '%?%'";
-        String[] args = {String.valueOf(barcode_id)};
-        db.update(BARCODE_TABLE, cv, selection, args);
+    public void updateLocalDatabase(String barcode_id, int sync_status){
+        if(sync_status == 0) {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(COLUMN_B_SYNCSTATUS, sync_status);
+            db.update(BARCODE_TABLE, cv, " b_barcodeId = ?", new String[]{barcode_id});
+        }
     }
 
     // This is called the first time a database is accessed. There should be code in here to create a new database.
@@ -130,7 +118,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_B_LATITUDE, barcodeModel.getLatitude());
         cv.put(COLUMN_B_LONGITUDE, barcodeModel.getLongitude());
         cv.put(COLUMN_B_ROW, barcodeModel.getRow());
-        cv.put(COLUMN_B_ROW, barcodeModel.getSection());
+        cv.put(COLUMN_B_SECTION, barcodeModel.getSection());
         cv.put(COLUMN_B_LASTUPDATED, barcodeModel.getLastUpdated());
         cv.put(COLUMN_B_SYNCSTATUS, barcodeModel.getSync_status());
 
@@ -139,18 +127,21 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return insert != -1;
     }
 
-    public void insertOneToBarcodeTable() {
+    public void insertToBarcodeTable() {
         SQLiteDatabase db = this.getWritableDatabase();
-        String q = "SELECT * FROM " + BARCODE_TABLE + " WHERE b_barcodeId = ? OR b_barcodeId = ?;";
-        String val = "012345678905";
-        String[] args = {val, "012345698905"};
+        String q = "SELECT * FROM " + BARCODE_TABLE + " WHERE b_barcodeId IN (?,?,?,?);";
+        String[] args = {"012345678905", "016545698905", "016926215615", "019481521561"};
         Cursor cur = db.rawQuery(q, args);
 
         if(cur.getCount() == 0) {
-            String q1 = "INSERT INTO " + BARCODE_TABLE + " VALUES('012345678905', 'Wooden Box', '12.45129', '-167.12746', '5', '1', '2020-11-27 07:05:12.215', '1');";
-            String q2 = "INSERT INTO " + BARCODE_TABLE + " VALUES('012345698905', 'Wooden Box', '12.45129', '-167.12746', '5', '1', '2020-11-27 07:05:12.215', '1');";
+            String q1 = "INSERT INTO " + BARCODE_TABLE + " VALUES('012345678905', 'Bin', '12.45129', '-167.12746', '5', '1', '2020-11-27 07:05:12.215', '1');";
+            String q2 = "INSERT INTO " + BARCODE_TABLE + " VALUES('016545698905', 'Drum', '12.45129', '-167.12746', '5', '1', '2020-11-27 07:05:12.215', '1');";
+            String q3 = "INSERT INTO " + BARCODE_TABLE + " VALUES('016926215615', 'Drum', '17.45559', '-167.11746', '12', '3', '2020-11-27 09:05:12.215', '1');";
+            String q4 = "INSERT INTO " + BARCODE_TABLE + " VALUES('019481521561', 'Bin', '17.45559', '-167.11746', '12', '3', '2020-11-27 09:05:12.215', '1');";
             db.execSQL(q1);
             db.execSQL(q2);
+            db.execSQL(q3);
+            db.execSQL(q4);
         }
         cur.close();
     }
@@ -216,7 +207,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public Cursor readAllDataFromBarcodeTable() {
-        String query = "SELECT b_barcodeId, b_row, b_section, b_syncStatus FROM " + BARCODE_TABLE + " WHERE c_syncStatus = 1;";
+        String query = "SELECT b_barcodeId, b_row, b_section, b_syncStatus FROM " + BARCODE_TABLE + ";";
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = null;
@@ -225,39 +216,4 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         return cursor;
     }
-
-//    public List<UserRegistrationModel> getEveryoneRegistered(){
-//        List<UserRegistrationModel> returnList = new ArrayList<>();
-//
-//        // Get data from the database
-//
-//        String queryString = "SELECT * FROM " + CREDENTIALS_TABLE;
-//
-//        SQLiteDatabase db = this.getReadableDatabase();
-//
-//        Cursor cursor = db.rawQuery(queryString, null);
-//
-//        if(cursor.moveToFirst()) {
-//            // Loop through the cursor (result set) and create new user objects. Put them into the return list.
-//
-//            do {
-//                String userFirstName = cursor.getString(1);
-//                String userLastName = cursor.getString(2);
-//                String userUsername = cursor.getString(3);
-//                String userPassword = cursor.getString(4);
-//                String userEmail = cursor.getString(5);
-//
-//                UserRegistrationModel newUserRegistrationModel = new UserRegistrationModel(userFirstName, userLastName, userUsername, userPassword, userEmail);
-//                returnList.add(newUserRegistrationModel);
-//
-//
-//            } while(cursor.moveToNext());
-//
-//        }
-//
-//        // Close both the cursor and the db when done.
-//        cursor.close();
-//        db.close();
-//        return returnList;
-//    }
 }
