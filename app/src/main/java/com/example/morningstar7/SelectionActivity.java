@@ -10,10 +10,18 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class SelectionActivity extends AppCompatActivity{
+
+    DataBaseHelper dataBaseHelper;
+
+    ArrayAdapter userArrayAdapter;
+
+    ListView lv_barcodeRecord;
 
     private static final int CAMERA_PERMISSION_CODE = 100;
 
@@ -27,8 +35,8 @@ public class SelectionActivity extends AppCompatActivity{
         getSupportActionBar().setTitle("Main Menu");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        checkPermission(Manifest.permission.CAMERA,
-                CAMERA_PERMISSION_CODE);
+
+
 
         // Assigning buttons
         btn_scan = findViewById(R.id.btn_scan);
@@ -37,11 +45,18 @@ public class SelectionActivity extends AppCompatActivity{
         btn_sync = findViewById(R.id.btn_sync);
 
 
+        lv_barcodeRecord = findViewById(R.id.lv_barcodeRecord);
+
+        dataBaseHelper = new DataBaseHelper(this);
+
+        ShowAllRecords(dataBaseHelper);
+
         // Move to the ScanningActivity Interface
         btn_scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                startActivity(new Intent(SelectionActivity.this, ScanningActivity.class));
+                checkPermission(Manifest.permission.CAMERA,
+                        CAMERA_PERMISSION_CODE);
             }
         });
 
@@ -85,6 +100,7 @@ public class SelectionActivity extends AppCompatActivity{
                     "Permission already granted",
                     Toast.LENGTH_SHORT)
                     .show();
+            startActivity(new Intent(SelectionActivity.this, ScanningActivity.class));
         }
     }
 
@@ -104,13 +120,21 @@ public class SelectionActivity extends AppCompatActivity{
                         "Camera Permission Granted",
                         Toast.LENGTH_SHORT)
                         .show();
+
+                startActivity(new Intent(SelectionActivity.this, ScanningActivity.class));
             } else {
                 Toast.makeText(this,
                         "Camera Permission Denied",
                         Toast.LENGTH_SHORT)
                         .show();
+
             }
         }
+    }
+
+    private void ShowAllRecords(DataBaseHelper dataBaseHelper2) {
+        //userArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, dataBaseHelper2.getBarcodeRecords());
+        //lv_barcodeRecord.setAdapter(userArrayAdapter);
     }
 
 }

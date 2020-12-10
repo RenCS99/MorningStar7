@@ -1,30 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-    <FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.budiyev.android.codescanner.CodeScannerView
-            android:id="@+id/scanner_view"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:autoFocusButtonColor="@android:color/white"
-            app:autoFocusButtonVisible="true"
-            app:flashButtonColor="@android:color/white"
-            app:flashButtonVisible="true"
-            app:frameColor="@android:color/white"
-            app:frameCornersSize="50dp"
-            app:frameCornersRadius="0dp"
-            app:frameAspectRatioWidth="1"
-            app:frameAspectRatioHeight="1"
-            app:frameSize="0.75"
-            app:frameThickness="2dp"
-            app:maskColor="#77000000"/>
-    </FrameLayout>
+            android:layout_weight="1">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <RelativeLayout
+                android:id="@+id/relativeLayoutSubmitForm"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:padding="100px"
+                android:gravity="center"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Add value with barcode into database"
+                    android:layout_margin="30px"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+
+                <EditText
+                    android:id="@+id/editText_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="30px"
+                    android:hint="Please enter row"
+                    android:drawableLeft="@drawable/ic_baseline_space_bar_24"
+                    android:drawablePadding="30px"
+                    android:layout_below="@id/textView">
+
+                </EditText>
+
+                <EditText
+                    android:id="@+id/editText_column"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editText_row"
+                    android:drawableLeft="@drawable/ic_baseline_space_bar_24"
+                    android:drawablePadding="30px"
+                    android:layout_margin="30px"
+                    android:hint="Please enter column">
+
+                </EditText>
+
+                <EditText
+                    android:id="@+id/editText_barcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editText_column"
+                    android:layout_margin="30px"
+                    android:drawableLeft="@drawable/ic_baseline_view_column_24"
+                    android:editable="false"
+                    android:drawablePadding="20px"
+                    android:hint="Barcode"
+                    android:clickable="false"
+                    tools:ignore="Deprecated">
+
+                </EditText>
+
+                <Button
+                    android:id="@+id/btn_submit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/editText_barcode"
+                    android:text="Submit"
+                    android:layout_margin="100px"/>
+
+            </RelativeLayout>
+
+            <FrameLayout
+                android:id="@+id/framelayout"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible">
+
+                <com.budiyev.android.codescanner.CodeScannerView
+                    android:id="@+id/scanner_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:autoFocusButtonColor="@android:color/white"
+                    app:autoFocusButtonVisible="true"
+                    app:flashButtonColor="@android:color/white"
+                    app:flashButtonVisible="true"
+                    app:frameColor="@android:color/white"
+                    app:frameCornersSize="50dp"
+                    app:frameCornersRadius="0dp"
+                    app:frameAspectRatioWidth="1"
+                    app:frameAspectRatioHeight="1"
+                    app:frameSize="0.75"
+                    app:frameThickness="2dp"
+                    app:maskColor="#77000000"/>
+            </FrameLayout>
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:padding="20dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btn_scan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="SCAN"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:padding="20px"/>
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+
+</RelativeLayout>

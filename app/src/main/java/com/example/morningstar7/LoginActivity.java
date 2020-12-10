@@ -101,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        btn_register.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
+        btn_register.setOnClickListener(v -> startActivity(new Intent(LoginActivity.this, SelectionActivity.class)));
     }
 
     public class Connection extends AsyncTask<String, String, String> {

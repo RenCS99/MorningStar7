@@ -105,8 +105,8 @@ public class ScanningActivity extends AppCompatActivity{
 
                 DataBaseHelper dataBaseHelper  = new DataBaseHelper(ScanningActivity.this);
 
-                long success = dataBaseHelper.addRowColumnBarcode(rowColumnBarcodeModel);
-                Toast.makeText(ScanningActivity.this, "Barcode with values has been written in database at index: " + success, Toast.LENGTH_SHORT).show();
+                //long success = dataBaseHelper.rowColumnBarcodeModel(rowColumnBarcodeModel); To make it runnable we need to write this code into datbasehelper class
+                //Toast.makeText(ScanningActivity.this, "Barcode with values has been written in database at index: " + success, Toast.LENGTH_SHORT).show();
             }
         });
 
