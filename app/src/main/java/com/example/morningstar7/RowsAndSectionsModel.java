@@ -1,7 +1,7 @@
 package com.example.morningstar7;
 
 public class RowsAndSectionsModel {
-//container, row and section --location
+//container, row and section --locations
     private int containerId;
     private int row;
     private int section;
