@@ -3,7 +3,7 @@ package com.example.morningstar7;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-
+//scanning
 
 public class ScanningActivity extends AppCompatActivity{
 
