@@ -43,7 +43,7 @@ public class RowsAndSectionsModel {
     public void setRow(int row) {
         this.row = row;
     }
-
+//find section
     public int getSection() {
         return section;
     }
